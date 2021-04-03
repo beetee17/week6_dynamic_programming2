@@ -47,10 +47,34 @@ def optimal_weight(W, w):
                 # max of 3 possibilities: 
                 T[n][j] = max(T[n-1][max(0, j - w_n)] + w_n, T[n-1][j], T[n][j-1])
 
+    items = backtrace(T, w, W)
+    print(items)
     # return max weight when capcity is W and all items considered
     return T[-1][-1]
+
+def backtrace(T, w, W):
+    i = len(w) 
+    j = W 
+    items = []
+    while i > 0 and j > 0:
+
+        w_i = w[i-1]
+        
+        # 2 possibilities -> item was taken or not
+        if T[i][j] == T[i-1][j]:
+            # item was not taken
+            i -= 1
+            
+        else:
+  
+            j = max(0, j-w_i)
+            items.append(w_i)
+            i -= 1
+   
+    return items
 
 if __name__ == '__main__':
     input = sys.stdin.read()
     W, n, *w = list(map(int, input.split()))
     print(optimal_weight(W, w))
+    

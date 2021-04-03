@@ -66,13 +66,12 @@ def backtrace(T, w, W):
             j = max(0, j-w_i)
             items.append(w_i)
             i -= 1
-            
-            
    
     return items
 
 def partition3_dp(A):
-    
+    ### This approach does not work in some cases e.g. if A = [1, 1, 1, 2, 2, 2]
+
     # don't even try if sum of all elements is not divisible by 3
     if sum(A) % 3 != 0 or len(A) < 3:
         return 0
@@ -113,9 +112,44 @@ def partition3_dp(A):
             # else 3 distinct subsets were found to add up to the target sum!
             return 1
 
+def partition3_DP(A):
+
+    # don't even try if sum of all elements is not divisible by 3
+    if sum(A) % 3 != 0 or len(A) < 3:
+        return 0
+
+    ### This approach somehow works. WHY??
+    target_sum = sum(A) // 3
+    
+    # imagine problem of maximising weight (target value) of a knapsack given items of 
+    # various weights (values of souvenirs)
+    # if knapsack cannot be filled to its capacity -> there does not exist a subset of A
+    # that adds to target sum
+
+    T1 = knapsack_0_1(A, target_sum)
+
+    if T1[-1][-1] != target_sum:
+        return 0
+    else:
+        target_sum *= 2
+        T2 = knapsack_0_1(A, target_sum)
+
+        if T2[-1][-1] != target_sum:
+            return 0
+
+        else:
+            target_sum = (3 * target_sum) // 2
             
+            T3 = knapsack_0_1(A, target_sum)
+        
+            if T3[-1][-1] != target_sum:
+                return 0
+
+            
+            return 1
+
 if __name__ == '__main__':
     input = sys.stdin.read()
     n, *A = list(map(int, input.split()))
-    print(partition3_dp(A))
+    print(partition3_DP(A))
 
